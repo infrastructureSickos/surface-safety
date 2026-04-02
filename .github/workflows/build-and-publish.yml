@@ -100,6 +100,16 @@ jobs:
           echo "Published to Modrinth: version_id=${MODRINTH_VERSION_ID}"
           echo "modrinth_version_id=${MODRINTH_VERSION_ID}" >> "$GITHUB_OUTPUT"
 
+      - name: Update Modrinth project categories
+        env:
+          MODRINTH_API_TOKEN: ${{ secrets.MODRINTH_API_TOKEN }}
+        run: |
+          curl -sf -X PATCH \
+            -H "Authorization: ${MODRINTH_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{"categories": ["mobs"]}' \
+            "https://api.modrinth.com/v2/project/surface-safety"
+
   update-modpack:
     needs: [build, publish]
     runs-on: ubuntu-latest
